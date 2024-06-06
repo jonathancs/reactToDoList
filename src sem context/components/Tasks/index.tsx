@@ -1,11 +1,15 @@
 import { TbClipboardText } from "react-icons/tb";
+import { ITask } from "../../App";
 import { Task } from "../Task";
 import styles from "./tasks.module.css";
-import { useContext } from "react";
-import { TasksContext } from "../../contexts/TasksContexts";
 
-export function Tasks() {
-  const {tasks} = useContext(TasksContext)
+interface Props {
+  tasks: ITask[];
+  onDelete: (taskId: string) => void;
+  onComplete: (taskId: string) => void;
+}
+
+export function Tasks({ tasks, onDelete, onComplete }: Props) {
   const tasksQuantity = tasks.length;
   const completedTasks = tasks.filter((task) => task.isComplete).length;
 
@@ -27,7 +31,12 @@ export function Tasks() {
 
       <div className={styles.list}>
         {tasks.map((task) => (
-          <Task task={task} />
+          <Task
+            key={task.id}
+            task={task}
+            onDelete={onDelete}
+            onComplete={onComplete}
+          />
         ))}
 
         {tasks.length <= 0 && (

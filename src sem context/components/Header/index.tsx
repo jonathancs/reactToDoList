@@ -1,17 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import todoLogo from "../../assets/todoLogo.svg";
 import styles from "./header.module.css";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { TasksContext } from "../../contexts/TasksContexts";
 
-export function Header() {
+interface Props {
+  onAddTask: (taskTitle: string) => void;
+}
+
+export function Header({ onAddTask }: Props) {
   const [title, setTitle] = useState("");
-  const {addTask} = useContext(TasksContext)
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    addTask(title);
+    onAddTask(title);
     setTitle("");
   }
 

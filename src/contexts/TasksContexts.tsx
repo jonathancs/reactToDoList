@@ -1,4 +1,4 @@
-import { Children, createContext, ReactNode, useState } from "react";
+import { Children, createContext, ReactNode, useReducer, useState } from "react";
 
 export interface ITask {
     id: string;
@@ -19,27 +19,58 @@ interface TasksContextProviderType {
     children: ReactNode
 }
 
+// parametros do reducer, funcao e valor  inicial.
+// a funcao é dois parametros, state, valor atual em tempo real da variável, e a action.
+
 export function TasksContextProvider ({children}: TasksContextProviderType) {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [tasks, dispatch] = useReducer((state: ITask[], action: any) => {
+    console.log(state)
+    console.log(action)
+
+    if (action.type == 'ADD_NEW_TASK') {
+      return [...state, action.payload.newTask]
+    }
+
+    if (action.type == 'DELETE_TASK') {
+      return [action.payload.newTasks]
+    }
+
+    if (action.type == 'TOGGLE_CHECK') {
+      return [action.payload.newTasks]
+    }
+
+    return state
+  }, [])
 
   function addTask(taskText: string) {
-    setTasks([
-      ...tasks,
-      {
-        id: crypto.randomUUID(),
-        text: taskText,
-        isComplete: false,
+
+    let newTask = {
+      id: crypto.randomUUID(),
+      text: taskText,
+      isComplete: false,
+    }
+
+    dispatch ({
+      type: 'ADD_NEW_TASK',
+      payload: {
+        newTask
       },
-    ]);
+    })
   }
 
   function deleteTaskById(taskId: string) {
-    const newTasks = tasks.filter((task) => task.id != taskId);
-    setTasks(newTasks);
+    let newTasks = tasks.filter((task) => task.id != taskId);
+
+    dispatch ({
+      type: 'DELETE_TASK',
+      payload: {
+        newTasks
+      },
+    })
   }
 
   function toggleCheckById(taskId: string) {
-    const newTasks = tasks.map((task) => {
+    let newTasks = tasks.map((task) => {
       if (task.id == taskId) {
         return {
           ...task,
@@ -48,7 +79,13 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
       }
       return task;
     });
-    setTasks(newTasks);
+    
+    dispatch ({
+      type: 'TOGGLE_CHECK',
+      payload: {
+        newTasks
+      },
+    })
   }
 
   return (

@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useReducer } from "react";
-import { ActionTypes, tasksReducer } from "../reducers/tasksReducer";
+import { ITask, tasksReducer } from "../reducers/tasks/reducer";
+import { ActionTypes, addNewCycleAction, deleteTaskByIdAction, toggleCheckByIdAction } from "../reducers/tasks/actions";
 
 
 
@@ -30,23 +31,13 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
       isComplete: false,
     }
 
-    dispatch ({
-      type: ActionTypes.ADD_NEW_TASK,
-      payload: {
-        newTask
-      },
-    })
+    dispatch (addNewCycleAction(newTask))
   }
 
   function deleteTaskById(taskId: string) {
     let newTasks = tasks.filter((task) => task.id != taskId);
 
-    dispatch ({
-      type: ActionTypes.DELETE_TASK,
-      payload: {
-        newTasks
-      },
-    })
+    dispatch (deleteTaskByIdAction(newTasks))
   }
 
   function toggleCheckById(taskId: string) {
@@ -60,12 +51,7 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
       return task;
     });
     
-    dispatch ({
-      type: ActionTypes.TOGGLE_CHECK,
-      payload: {
-        newTasks
-      },
-    })
+    dispatch (toggleCheckByIdAction(newTasks))
   }
 
   return (

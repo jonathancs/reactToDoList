@@ -1,13 +1,9 @@
+import { ActionTypes } from "./actions";
+
 export interface ITask {
     id: string;
     text: string;
     isComplete: boolean;
-}
-
-export enum ActionTypes {
-  ADD_NEW_TASK = 'ADD_NEW_TASK',
-  DELETE_TASK = 'DELETE_TASK',
-  TOGGLE_CHECK = 'TOGGLE_CHECK',
 }
 
 export function tasksReducer (state: ITask[], action: any) {

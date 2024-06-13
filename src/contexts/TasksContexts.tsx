@@ -1,10 +1,7 @@
-import { Children, createContext, ReactNode, useReducer, useState } from "react";
+import { createContext, ReactNode, useReducer } from "react";
+import { ActionTypes, tasksReducer } from "../reducers/tasksReducer";
 
-export interface ITask {
-    id: string;
-    text: string;
-    isComplete: boolean;
-}
+
 
 interface TasksContextType {
     tasks: ITask[]
@@ -23,19 +20,7 @@ interface TasksContextProviderType {
 // a funcao é dois parametros, state, valor atual em tempo real da variável, e a action.
 
 export function TasksContextProvider ({children}: TasksContextProviderType) {
-  const [tasks, dispatch] = useReducer((state: ITask[], action: any) => {
-
-    switch (action.type) {
-      case 'ADD_NEW_TASK':
-        return [...state, action.payload.newTask]
-      case 'DELETE_TASK':
-        return action.payload.newTasks
-      case 'TOGGLE_CHECK':
-        return action.payload.newTasks
-      default:
-        return state
-    }
-  }, [])
+  const [tasks, dispatch] = useReducer(tasksReducer, [])
 
   function addTask(taskText: string) {
 
@@ -46,7 +31,7 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
     }
 
     dispatch ({
-      type: 'ADD_NEW_TASK',
+      type: ActionTypes.ADD_NEW_TASK,
       payload: {
         newTask
       },
@@ -57,7 +42,7 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
     let newTasks = tasks.filter((task) => task.id != taskId);
 
     dispatch ({
-      type: 'DELETE_TASK',
+      type: ActionTypes.DELETE_TASK,
       payload: {
         newTasks
       },
@@ -76,7 +61,7 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
     });
     
     dispatch ({
-      type: 'TOGGLE_CHECK',
+      type: ActionTypes.TOGGLE_CHECK,
       payload: {
         newTasks
       },

@@ -25,22 +25,16 @@ interface TasksContextProviderType {
 export function TasksContextProvider ({children}: TasksContextProviderType) {
   const [tasks, dispatch] = useReducer((state: ITask[], action: any) => {
 
-    console.log(state)
-    console.log(action)
-
-    if (action.type == 'ADD_NEW_TASK') {
-      return [...state, action.payload.newTask]
+    switch (action.type) {
+      case 'ADD_NEW_TASK':
+        return [...state, action.payload.newTask]
+      case 'DELETE_TASK':
+        return action.payload.newTasks
+      case 'TOGGLE_CHECK':
+        return action.payload.newTasks
+      default:
+        return state
     }
-
-    if (action.type == 'DELETE_TASK') {
-      return action.payload.newTasks
-    }
-
-    if (action.type == 'TOGGLE_CHECK') {
-      return action.payload.newTasks
-    }
-
-    return state
   }, [])
 
   function addTask(taskText: string) {

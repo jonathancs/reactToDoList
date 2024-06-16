@@ -1,8 +1,7 @@
 import { createContext, ReactNode, useReducer } from "react";
 import { ITask, tasksReducer } from "../reducers/tasks/reducer";
-import { ActionTypes, addNewCycleAction, deleteTaskByIdAction, toggleCheckByIdAction } from "../reducers/tasks/actions";
-
-
+import { addNewCycleAction, deleteTaskByIdAction, toggleCheckByIdAction } from "../reducers/tasks/actions";
+import { produce } from "immer";
 
 interface TasksContextType {
     tasks: ITask[]
@@ -35,18 +34,24 @@ export function TasksContextProvider ({children}: TasksContextProviderType) {
   }
 
   function deleteTaskById(taskId: string) {
-    let newTasks = tasks.filter((task) => task.id != taskId);
+    let newTasks = tasks.filter((task: ITask) => task.id != taskId);
 
     dispatch (deleteTaskByIdAction(newTasks))
   }
 
   function toggleCheckById(taskId: string) {
-    let newTasks = tasks.map((task) => {
+    let newTasks = tasks.map((task: ITask) => {
       if (task.id == taskId) {
-        return {
-          ...task,
-          isComplete: !task.isComplete,
-        };
+        // standard hook management
+        // return {
+          //   ...task,
+          //   isComplete: !task.isComplete,
+          // };
+          
+          // with immer hook manager
+          return produce(task, (draft) => {
+            draft.isComplete = !draft.isComplete
+          })
       }
       return task;
     });
